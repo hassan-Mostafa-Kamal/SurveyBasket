@@ -1,4 +1,6 @@
 
+using SurveyBasket.Api.Services;
+
 namespace SurveyBasket.Api
 {
     public class Program
@@ -10,6 +12,7 @@ namespace SurveyBasket.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddScoped<IPollService, PollService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
