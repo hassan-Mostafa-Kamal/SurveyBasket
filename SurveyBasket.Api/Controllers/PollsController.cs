@@ -1,4 +1,6 @@
-﻿using SurveyBasket.Api.Services;
+﻿using SurveyBasket.Api.DTOs;
+using SurveyBasket.Api.Mapping;
+using SurveyBasket.Api.Services;
 
 namespace SurveyBasket.Api.Controllers
 
@@ -20,7 +22,7 @@ namespace SurveyBasket.Api.Controllers
         {
             var polls = _pollService.GetAll();
 
-            return Ok(polls);
+            return Ok(polls.MaptoPollDto());
 
         }
 
@@ -28,36 +30,36 @@ namespace SurveyBasket.Api.Controllers
 
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get([FromRoute]int id)
         {
             var poll = _pollService.Get(id);
             if (poll == null)
             {
                 return NotFound();
             }
-            return Ok(poll);
+            return Ok(poll.MaptoPollDto());
 
         }
 
         [HttpPost("")]
-        public IActionResult Add(Poll poll) { 
+        public IActionResult Add([FromBody] PollDto pollDto) { 
         
-           var newPoll = _pollService.Add(poll);
+           var newPoll = _pollService.Add(pollDto.MaptoPoll());
             return CreatedAtAction(nameof(Get),new {id = newPoll.Id},newPoll); //201
         
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Poll poll)
+        public IActionResult Update([FromRoute] int id,[FromBody] PollDto pollDto)
         {
-           var isUpdated = _pollService.Update(id,poll);
+           var isUpdated = _pollService.Update(id, pollDto.MaptoPoll());
             if (!isUpdated)
                 return NotFound();
             return NoContent(); // 204
 
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             var isDeleted = _pollService.Delete(id);
             if (!isDeleted)
