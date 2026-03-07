@@ -11,7 +11,7 @@ namespace SurveyBasket.Api.Services
            new Poll {
                 Id = 1,
                 Titel = "poll 1",
-                Description = "My First Poll"
+                Summary = "My First Poll"
             }
 
            ];//new List<Polls>();
@@ -39,7 +39,7 @@ namespace SurveyBasket.Api.Services
             {
                 return false;
             }
-            currentPoll.Description = poll.Description;
+            currentPoll.Summary = poll.Summary;
             currentPoll.Titel = poll.Titel;
             return true;
 

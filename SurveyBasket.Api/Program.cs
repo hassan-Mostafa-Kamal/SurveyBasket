@@ -1,3 +1,4 @@
+
 namespace SurveyBasket.Api
 {
     public class Program
@@ -8,7 +9,8 @@ namespace SurveyBasket.Api
 
             // Add services to the container.
 
-            builder.Services.AddDependencies();
+            builder.Services.AddDependencies(builder.Configuration);
+           
 
             var app = builder.Build();
 

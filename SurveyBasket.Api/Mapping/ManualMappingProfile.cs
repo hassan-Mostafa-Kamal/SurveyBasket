@@ -9,7 +9,7 @@ namespace SurveyBasket.Api.Mapping
             return new PollDto
             {
                 Id = poll.Id,
-                Description = poll.Description,
+                Description = poll.Summary,
                 Titel = poll.Titel,
             };
         }
@@ -27,7 +27,7 @@ namespace SurveyBasket.Api.Mapping
         {
             return new Poll
             {
-                Description = poll.Description,
+                Summary = poll.Description,
                 Titel = poll.Titel,
             };
         }

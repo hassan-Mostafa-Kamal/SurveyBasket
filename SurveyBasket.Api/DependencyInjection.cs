@@ -1,6 +1,8 @@
 ﻿using Mapster;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using SurveyBasket.Api.persistence;
 using SurveyBasket.Api.Services;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -9,10 +11,20 @@ namespace SurveyBasket.Api
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddDependencies (this IServiceCollection services)
+
+        public static IServiceCollection AddDependencies (this IServiceCollection services,IConfiguration configuration)
         {
 
            services.AddControllers();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnaction") ??
+                throw new InvalidOperationException("ConnectionString 'DefaultConnaction' Not Found ");
+           services.AddDbContext<ApplicationDbContext>(options =>
+            {
+               options.UseSqlServer(connectionString);
+            });
+
+
             services.AddSwaggerServices()
                     .AddMapsterConfig()
                     .AddFluentValidationConfig();
