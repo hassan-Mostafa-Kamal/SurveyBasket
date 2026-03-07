@@ -1,5 +1,8 @@
 
+using Mapster;
+using MapsterMapper;
 using SurveyBasket.Api.Services;
+using System.Reflection;
 
 namespace SurveyBasket.Api
 {
@@ -15,6 +18,11 @@ namespace SurveyBasket.Api
             builder.Services.AddScoped<IPollService, PollService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            //Add Mapster 
+            var mappingConfig = TypeAdapterConfig.GlobalSettings;
+            mappingConfig.Scan(Assembly.GetExecutingAssembly());
+            builder.Services.AddSingleton<IMapper>(new Mapper(mappingConfig));
 
             var app = builder.Build();
 

@@ -23,7 +23,7 @@ namespace SurveyBasket.Api.Mapping
 
 
 
-        public static Poll MaptoPoll(this PollDto poll)
+        public static Poll MaptoPoll(this CreateOrUpdatePollDto poll)
         {
             return new Poll
             {
