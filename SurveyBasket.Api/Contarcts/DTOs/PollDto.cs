@@ -1,4 +1,4 @@
-﻿namespace SurveyBasket.Api.DTOs
+﻿namespace SurveyBasket.Api.Contarcts.DTOs
 {
     public class PollDto
     {

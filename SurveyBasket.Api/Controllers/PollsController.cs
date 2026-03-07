@@ -1,5 +1,6 @@
 ﻿using Mapster;
-using SurveyBasket.Api.DTOs;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SurveyBasket.Api.Contarcts.DTOs;
 using SurveyBasket.Api.Mapping;
 using SurveyBasket.Api.Services;
 
@@ -12,9 +13,12 @@ namespace SurveyBasket.Api.Controllers
     {
         private readonly IPollService _pollService;
 
-        public PollsController(IPollService pollService)
+        public IValidator<CreateOrUpdatePollDto> _Validator { get; }
+
+        public PollsController(IPollService pollService ,IValidator<CreateOrUpdatePollDto> validator)
         {
             _pollService = pollService;
+            _Validator = validator;
         }
 
       
@@ -48,6 +52,16 @@ namespace SurveyBasket.Api.Controllers
 
         [HttpPost("")]
         public IActionResult Add([FromBody] CreateOrUpdatePollDto CreatePollDto) {
+
+            //var validationResult = _Validator.Validate(CreatePollDto);
+            //if (!validationResult.IsValid)
+            //{
+            //    var moelState = new ModelStateDictionary();
+            //    validationResult.Errors.ForEach(x => moelState.AddModelError(x.PropertyName, x.ErrorMessage));
+            //    return ValidationProblem(moelState);
+            //}
+
+
 
             // var newPoll = _pollService.Add(pollDto.MaptoPoll());
             var newPoll = _pollService.Add(CreatePollDto.Adapt<Poll>());

@@ -1,4 +1,4 @@
-﻿using SurveyBasket.Api.DTOs;
+﻿using SurveyBasket.Api.Contarcts.DTOs;
 
 namespace SurveyBasket.Api.Mapping
 {

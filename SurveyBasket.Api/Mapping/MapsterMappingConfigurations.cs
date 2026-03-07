@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using SurveyBasket.Api.DTOs;
 
 namespace SurveyBasket.Api.Mapping
 {
