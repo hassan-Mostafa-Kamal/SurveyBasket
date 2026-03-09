@@ -9,8 +9,11 @@ namespace SurveyBasket.Api.Mapping
             return new PollDto
             {
                 Id = poll.Id,
-                Description = poll.Summary,
+                Summary = poll.Summary,
                 Titel = poll.Titel,
+                EndsAt = poll.EndsAt,
+                IsPublished = poll.IsPublished,
+                StartsAt = poll.StartsAt
             };
         }
 
@@ -27,8 +30,11 @@ namespace SurveyBasket.Api.Mapping
         {
             return new Poll
             {
-                Summary = poll.Description,
+                Summary = poll.Summary,
                 Titel = poll.Titel,
+                StartsAt = poll.StartsAt,
+                EndsAt = poll.EndsAt,
+                IsPublished = poll.IsPublished,
             };
         }
     }

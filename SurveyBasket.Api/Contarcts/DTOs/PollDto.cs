@@ -1,9 +1,12 @@
 ﻿namespace SurveyBasket.Api.Contarcts.DTOs
 {
-    public class PollDto
+    public record PollDto
     {
-        public int Id { get; set; }
-        public string Titel { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public int Id { get; init; }
+        public string Titel { get; init; } = string.Empty;
+        public string Summary { get; init; } = string.Empty;
+        public bool IsPublished { get; init; }
+        public DateOnly StartsAt { get; init; }
+        public DateOnly EndsAt { get; init; }
     }
 }
