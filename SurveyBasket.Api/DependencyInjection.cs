@@ -21,7 +21,7 @@ namespace SurveyBasket.Api
         {
 
            services.AddControllers();
-            services.AddAuthConfig();
+            services.AddAuthConfig(configuration);
 
             var connectionString = configuration.GetConnectionString("DefaultConnaction") ??
                 throw new InvalidOperationException("ConnectionString 'DefaultConnaction' Not Found ");
@@ -69,7 +69,7 @@ namespace SurveyBasket.Api
             return services;
         }
 
-        private static IServiceCollection AddAuthConfig(this IServiceCollection services)
+        private static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration)
         {
             // inject Fluent Validation
             //services.AddScoped<IValidator<CreateOrUpdatePollDto>, CreatePollValidator>();
@@ -92,9 +92,9 @@ namespace SurveyBasket.Api
                     ValidateAudience = true,
                     ValidateLifetime = true,
 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("677e7db633adcf33cb2b6e5a5fab359a3f8f33b3c93272d8f8cec0c2a6bcbf21")),
-                    ValidIssuer = "ServeyBasketApp",
-                    ValidAudience = "ServeyBasketAppUsers",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:Key"]!)),
+                    ValidIssuer = configuration["jwt:Issuer"],
+                    ValidAudience = configuration["jwt:Audience"],
                 };
             });
 

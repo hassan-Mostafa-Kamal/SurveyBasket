@@ -8,6 +8,14 @@ namespace SurveyBasket.Api.Authentication
 {
     public class JWTProvider : IJWTProvider
     {
+
+        public JWTProvider(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        private readonly IConfiguration _configuration;
+
+       
         public (string token, int expiresIn) GenerateToken(ApplicationUser user)
         {
             //our Claims
@@ -21,16 +29,18 @@ namespace SurveyBasket.Api.Authentication
             };
 
             //the Kay for encode and decode the token 
-            var kay = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("677e7db633adcf33cb2b6e5a5fab359a3f8f33b3c93272d8f8cec0c2a6bcbf21"));
+            var kay = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["jwt:Key"]!));
 
             var singingCredentions = new SigningCredentials(kay,SecurityAlgorithms.HmacSha256);
 
             var expiresIn = 30;
+
             var expirationDate = DateTime.Now.AddMinutes(expiresIn);
+
             // token parts
             var tokenParts = new JwtSecurityToken(
-                 issuer: "ServeyBasketApp",
-                 audience: "ServeyBasketAppUsers",
+                 issuer: _configuration["jwt:Issuer"],
+                 audience: _configuration["jwt:Audience"],
                  claims: claims,
                  expires: expirationDate,
                  signingCredentials: singingCredentions
