@@ -1,11 +1,16 @@
 ﻿using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using SurveyBasket.Api.Authentication;
 using SurveyBasket.Api.persistence;
 using SurveyBasket.Api.Services;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace SurveyBasket.Api
 {
@@ -16,6 +21,7 @@ namespace SurveyBasket.Api
         {
 
            services.AddControllers();
+            services.AddAuthConfig();
 
             var connectionString = configuration.GetConnectionString("DefaultConnaction") ??
                 throw new InvalidOperationException("ConnectionString 'DefaultConnaction' Not Found ");
@@ -28,6 +34,10 @@ namespace SurveyBasket.Api
             services.AddSwaggerServices()
                     .AddMapsterConfig()
                     .AddFluentValidationConfig();
+
+
+            services.AddScoped<IPollService, PollService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
 
         }
@@ -41,7 +51,7 @@ namespace SurveyBasket.Api
             return services;
         }
 
-        public static IServiceCollection AddMapsterConfig(this IServiceCollection services)
+        private static IServiceCollection AddMapsterConfig(this IServiceCollection services)
         {
             //inject Mapster 
             var mappingConfig = TypeAdapterConfig.GlobalSettings;
@@ -50,12 +60,44 @@ namespace SurveyBasket.Api
             return services;
 
         }
-        public static IServiceCollection AddFluentValidationConfig(this IServiceCollection services)
+        private static IServiceCollection AddFluentValidationConfig(this IServiceCollection services)
         {
             // inject Fluent Validation
             //services.AddScoped<IValidator<CreateOrUpdatePollDto>, CreatePollValidator>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddFluentValidationAutoValidation();
+            return services;
+        }
+
+        private static IServiceCollection AddAuthConfig(this IServiceCollection services)
+        {
+            // inject Fluent Validation
+            //services.AddScoped<IValidator<CreateOrUpdatePollDto>, CreatePollValidator>();
+            services.AddSingleton<IJWTProvider, JWTProvider>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("677e7db633adcf33cb2b6e5a5fab359a3f8f33b3c93272d8f8cec0c2a6bcbf21")),
+                    ValidIssuer = "ServeyBasketApp",
+                    ValidAudience = "ServeyBasketAppUsers",
+                };
+            });
+
             return services;
         }
 

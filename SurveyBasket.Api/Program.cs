@@ -1,4 +1,6 @@
 
+using SurveyBasket.Api.persistence;
+
 namespace SurveyBasket.Api
 {
     public class Program
@@ -10,8 +12,10 @@ namespace SurveyBasket.Api
             // Add services to the container.
 
             builder.Services.AddDependencies(builder.Configuration);
-           
 
+            //builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+                //.AddEntityFrameworkStores<ApplicationDbContext>();
+                
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,8 +27,9 @@ namespace SurveyBasket.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
+           // app.MapIdentityApi<ApplicationUser>();
 
             app.MapControllers();
 
