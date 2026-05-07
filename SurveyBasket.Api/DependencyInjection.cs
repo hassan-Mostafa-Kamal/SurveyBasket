@@ -71,11 +71,17 @@ namespace SurveyBasket.Api
 
         private static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration)
         {
-            // inject Fluent Validation
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>();
             //services.AddScoped<IValidator<CreateOrUpdatePollDto>, CreatePollValidator>();
             services.AddSingleton<IJWTProvider, JWTProvider>();
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // services.Configure<JWTOptions>(configuration.GetSection("Jwt"));
+            // services.Configure<JWTOptions>(configuration.GetSection(JWTOptions.SectionName));
+            services.AddOptions<JWTOptions>().BindConfiguration(JWTOptions.SectionName)
+                 .ValidateDataAnnotations()
+                 .ValidateOnStart();
+            var jwtSettings = configuration.GetSection(JWTOptions.SectionName).Get<JWTOptions>();
+           
 
             services.AddAuthentication(options =>
             {
@@ -84,6 +90,8 @@ namespace SurveyBasket.Api
 
             }).AddJwtBearer(options =>
             {
+
+
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -92,9 +100,9 @@ namespace SurveyBasket.Api
                     ValidateAudience = true,
                     ValidateLifetime = true,
 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:Key"]!)),
-                    ValidIssuer = configuration["jwt:Issuer"],
-                    ValidAudience = configuration["jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings?.Key!)),
+                    ValidIssuer = jwtSettings?.Issuer,
+                    ValidAudience = jwtSettings?.Audience,
                 };
             });
 

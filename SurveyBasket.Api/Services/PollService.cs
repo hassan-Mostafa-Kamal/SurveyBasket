@@ -10,7 +10,7 @@ namespace SurveyBasket.Api.Services
             _context = context;
         }
         public async Task<IEnumerable<Poll>> GetAllAsync(CancellationToken cancellationToken)
-        {
+          {
             return await _context.polls.ToListAsync(cancellationToken);
         }
         public async Task<Poll?> GetAsync(int id, CancellationToken cancellationToken)
