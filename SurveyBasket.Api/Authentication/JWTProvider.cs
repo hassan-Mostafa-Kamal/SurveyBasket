@@ -57,5 +57,35 @@ namespace SurveyBasket.Api.Authentication
             var token = new JwtSecurityTokenHandler().WriteToken(tokenParts);
             return (token , _options.Value.ExpiryMinutes);
         }
+
+        //validate the current token and get user Id from it  
+        public string? ValidateToken(string token)
+        {
+           var tokenHandler = new JwtSecurityTokenHandler();
+           var kay = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.Key));
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters()
+                {
+                    IssuerSigningKey = kay,
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+
+                },out SecurityToken  validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = jwtToken.Claims.First(x=>x.Type == JwtRegisteredClaimNames.Sub).Value; // that claim have the userId
+                return userId;
+            }
+            catch
+            {
+
+                return null;
+            }
+
+
+        }
     }
 }

@@ -8,11 +8,11 @@ namespace SurveyBasket.Api.Mapping
         {
             return new PollDto
             {
-                Id = poll.Id,
+                //Id = poll.Id,
                 Summary = poll.Summary,
                 Titel = poll.Titel,
                 EndsAt = poll.EndsAt,
-                IsPublished = poll.IsPublished,
+               // IsPublished = poll.IsPublished,
                 StartsAt = poll.StartsAt
             };
         }

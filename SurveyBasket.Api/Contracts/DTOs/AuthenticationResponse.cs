@@ -6,7 +6,10 @@
         string FirstName,
         string LastName,
         string Token,
-        int ExpiresIn
+        int ExpiresIn,
+        // add refresh token prop
+        string RefreshToken,
+        DateTime RefreshTokenExpiration
 
         );
     

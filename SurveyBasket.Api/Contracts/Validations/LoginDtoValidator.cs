@@ -1,15 +1,13 @@
 ﻿namespace SurveyBasket.Api.Contracts.Validations
 {
-    public class LoginDtoValidator:AbstractValidator<LoginDto>
+    public class LoginDtoValidator:AbstractValidator<RefreshTokenRequest>
     {
         public LoginDtoValidator()
         {
-            RuleFor(e => e.Email)
-                .NotEmpty()
-                .EmailAddress();
+            RuleFor(e => e.Token).NotEmpty();
 
-            RuleFor(e => e.Password)
-                .NotEmpty();
+            RuleFor(e => e.RefreshToken).NotEmpty();
+
         }
     }
 }
